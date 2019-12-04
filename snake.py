@@ -32,6 +32,18 @@ class Game:
                     self.snake.direction = 0
                     self.snake.move()
                     self.show_all()
+                if event.type == KEYDOWN and event.key == K_UP:
+                    self.snake.direction = 1
+                    self.snake.move()
+                    self.show_all()
+                if event.type == KEYDOWN and event.key == K_DOWN:
+                    self.snake.direction = 2
+                    self.snake.move()
+                    self.show_all()
+                if event.type == KEYDOWN and event.key == K_LEFT:
+                    self.snake.direction = 3
+                    self.snake.move()
+                    self.show_all()
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -68,18 +80,39 @@ class Snake:
             self.head["x"] += 10
         """Up"""
         if self.direction == 1:
-            pass
+            self.tail = self.body[0]
+            for num, part in enumerate(self.body):  # FIXME
+                try:
+                    self.body[num] = self.body[num + 1]
+                except IndexError:  # Will occur when iteration got to the last body part
+                    self.body[num] = self.head
+            self.head["y"] -= 10
+
         """Down"""
         if self.direction == 2:
-            pass
+            self.tail = self.body[0]
+            for num, part in enumerate(self.body):  # FIXME
+                try:
+                    self.body[num] = self.body[num + 1]
+                except IndexError:  # Will occur when iteration got to the last body part
+                    self.body[num] = self.head
+            self.head["y"] += 10
+
         """Left"""
         if self.direction == 3:
-            pass
+            self.tail = self.body[0]
+            for num, part in enumerate(self.body):  # FIXME
+                try:
+                    self.body[num] = self.body[num + 1]
+                except IndexError:  # Will occur when iteration got to the last body part
+                    self.body[num] = self.head
+            self.head["x"] -= 10
 
     def show(self):  # Displays the current position of the snake
         pygame.draw.rect(screen, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
         for part in self.body:
             pygame.draw.rect(screen, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
+        print(self.body)  # FIXME
 
 
 class Apple:
