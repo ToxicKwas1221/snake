@@ -12,17 +12,19 @@ APPLE_COLOR = (255, 0, 0)
 WIDTH = 500  # Only put number divisible by 10
 HEIGHT = 500  # Only put number divisible by 10
 
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption(CAPTION)
-pygame.time.delay(100)
+
+
 
 class Game:
     def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        pygame.display.set_caption(CAPTION)
         self.snake = Snake()
         self.apple = Apple(self.snake.body, self.snake.head)
 
     def start(self):
+        self.show_all()
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -30,6 +32,18 @@ class Game:
                     sys.exit()
                 if event.type == KEYDOWN and event.key == K_RIGHT:
                     self.snake.direction = 0
+                    self.snake.move()
+                    self.show_all()
+                if event.type == KEYDOWN and event.key == K_UP:
+                    self.snake.direction = 1
+                    self.snake.move()
+                    self.show_all()
+                if event.type == KEYDOWN and event.key == K_DOWN:
+                    self.snake.direction = 2
+                    self.snake.move()
+                    self.show_all()
+                if event.type == KEYDOWN and event.key == K_LEFT:
+                    self.snake.direction = 3
                     self.snake.move()
                     self.show_all()
 
@@ -40,9 +54,9 @@ class Game:
             return False
 
     def show_all(self):
-        screen.fill(BACKGROUD_COLOR)
-        self.snake.show()
-        self.apple.show()
+        self.screen.fill(BACKGROUD_COLOR)
+        self.snake.show(self.screen)
+        self.apple.show(self.screen)
         pygame.display.flip()
 
     def tick(self):
@@ -57,29 +71,50 @@ class Snake:
         self.direction = None
 
     def move(self):
-        """Right"""
+        """Right FIXME"""
         if self.direction == 0:
-            self.tail = self.body[0]
             for num, part in enumerate(self.body):  # FIXME
                 try:
                     self.body[num] = self.body[num+1]
                 except IndexError:  # Will occur when iteration got to the last body part
                     self.body[num] = self.head
+            self.tail = self.body[0]
             self.head["x"] += 10
         """Up"""
         if self.direction == 1:
-            pass
+            self.tail = self.body[0]
+            for num, part in enumerate(self.body):  # FIXME
+                try:
+                    self.body[num] = self.body[num + 1]
+                except IndexError:  # Will occur when iteration got to the last body part
+                    self.body[num] = self.head
+            self.head["y"] -= 10
+
         """Down"""
         if self.direction == 2:
-            pass
+            self.tail = self.body[0]
+            for num, part in enumerate(self.body):  # FIXME
+                try:
+                    self.body[num] = self.body[num + 1]
+                except IndexError:  # Will occur when iteration got to the last body part
+                    self.body[num] = self.head
+            self.head["y"] += 10
+
         """Left"""
         if self.direction == 3:
-            pass
+            self.tail = self.body[0]
+            for num, part in enumerate(self.body):  # FIXME
+                try:
+                    self.body[num] = self.body[num + 1]
+                except IndexError:  # Will occur when iteration got to the last body part
+                    self.body[num] = self.head
+            self.head["x"] -= 10
 
-    def show(self):  # Displays the current position of the snake
-        pygame.draw.rect(screen, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
+    def show(self, surface):  # Displays the current position of the snake
+        pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
         for part in self.body:
-            pygame.draw.rect(screen, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
+            pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
+        print(self.body, "and head is at:", self.head)  # FIXME
 
 
 class Apple:
@@ -92,8 +127,8 @@ class Apple:
             self.y = random.randrange(0, 510, 10)
             self.position = {"x" : self.x, "y" : self.y}
 
-    def show(self):
-        pygame.draw.rect(screen, APPLE_COLOR, pygame.Rect(self.x, self.y, 10, 10))
+    def show(self, surface):
+        pygame.draw.rect(surface, APPLE_COLOR, pygame.Rect(self.x, self.y, 10, 10))
 
 
 
