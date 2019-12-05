@@ -22,6 +22,7 @@ class Game:
         pygame.display.set_caption(CAPTION)
         self.snake = Snake()
         self.apple = Apple(self.snake.body, self.snake.head)
+        self.score = 0
 
     def start(self):
         self.show_all()
@@ -32,20 +33,16 @@ class Game:
                     sys.exit()
                 if event.type == KEYDOWN and event.key == K_RIGHT:
                     self.snake.direction = 0
-                    self.snake.move()
-                    self.show_all()
+                    self.tick()
                 if event.type == KEYDOWN and event.key == K_UP:
                     self.snake.direction = 1
-                    self.snake.move()
-                    self.show_all()
+                    self.tick()
                 if event.type == KEYDOWN and event.key == K_DOWN:
                     self.snake.direction = 2
-                    self.snake.move()
-                    self.show_all()
+                    self.tick()
                 if event.type == KEYDOWN and event.key == K_LEFT:
                     self.snake.direction = 3
-                    self.snake.move()
-                    self.show_all()
+                    self.tick()
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -55,12 +52,18 @@ class Game:
 
     def show_all(self):
         self.screen.fill(BACKGROUD_COLOR)
-        self.snake.show(self.screen)
         self.apple.show(self.screen)
+        self.snake.show(self.screen)
         pygame.display.flip()
 
     def tick(self):
-        pass
+        self.snake.move()
+        self.show_all()
+        if self.food_eaten():
+            self.score += 1
+            self.snake.grow()
+            print("Scored:", self.score, ",at", self.apple.position)
+            self.apple.__init__(self.snake.body, self.snake.head)
 
 
 class Snake:
@@ -71,9 +74,9 @@ class Snake:
         self.direction = None
 
     def move(self):
-        """Right FIXME"""
+        """Right"""
         if self.direction == 0:
-            for num, part in enumerate(self.body):  # FIXME
+            for num, part in enumerate(self.body):
                 try:
                     self.body[num] = self.body[num+1]
                 except IndexError:  # Will occur when iteration got to the last body part
@@ -83,7 +86,7 @@ class Snake:
         """Up"""
         if self.direction == 1:
             self.tail = self.body[0]
-            for num, part in enumerate(self.body):  # FIXME
+            for num, part in enumerate(self.body):
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
@@ -94,7 +97,7 @@ class Snake:
         """Down"""
         if self.direction == 2:
             self.tail = self.body[0]
-            for num, part in enumerate(self.body):  # FIXME
+            for num, part in enumerate(self.body):
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
@@ -105,7 +108,7 @@ class Snake:
         """Left"""
         if self.direction == 3:
             self.tail = self.body[0]
-            for num, part in enumerate(self.body):  # FIXME
+            for num, part in enumerate(self.body):
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
@@ -119,7 +122,8 @@ class Snake:
             pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
         print("tail:", self.tail, "body", self.body, "head:", self.head)  # FIXME
 
-
+    def grow(self):
+        self.body.insert(0, self.tail)
 class Apple:
     def __init__(self, snake_body, snake_head):  # generates position
         self.x = random.randrange(0, WIDTH+10, 10)
@@ -134,9 +138,9 @@ class Apple:
         pygame.draw.rect(surface, APPLE_COLOR, pygame.Rect(self.x, self.y, 10, 10))
 
 
-
-game = Game()
-game.start()
+if __name__ == '__main__':
+    game = Game()
+    game.start()
 
 
 
