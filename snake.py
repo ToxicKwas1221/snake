@@ -23,7 +23,6 @@ class Game:
         self.apple = Apple(self.snake.body, self.snake.head)
 
     def start(self):
-        self.show_all()
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -31,18 +30,6 @@ class Game:
                     sys.exit()
                 if event.type == KEYDOWN and event.key == K_RIGHT:
                     self.snake.direction = 0
-                    self.snake.move()
-                    self.show_all()
-                if event.type == KEYDOWN and event.key == K_UP:
-                    self.snake.direction = 1
-                    self.snake.move()
-                    self.show_all()
-                if event.type == KEYDOWN and event.key == K_DOWN:
-                    self.snake.direction = 2
-                    self.snake.move()
-                    self.show_all()
-                if event.type == KEYDOWN and event.key == K_LEFT:
-                    self.snake.direction = 3
                     self.snake.move()
                     self.show_all()
 
@@ -70,50 +57,29 @@ class Snake:
         self.direction = None
 
     def move(self):
-        """Right FIXME"""
+        """Right"""
         if self.direction == 0:
+            self.tail = self.body[0]
             for num, part in enumerate(self.body):  # FIXME
                 try:
                     self.body[num] = self.body[num+1]
                 except IndexError:  # Will occur when iteration got to the last body part
                     self.body[num] = self.head
-            self.tail = self.body[0]
             self.head["x"] += 10
         """Up"""
         if self.direction == 1:
-            self.tail = self.body[0]
-            for num, part in enumerate(self.body):  # FIXME
-                try:
-                    self.body[num] = self.body[num + 1]
-                except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
-            self.head["y"] -= 10
-
+            pass
         """Down"""
         if self.direction == 2:
-            self.tail = self.body[0]
-            for num, part in enumerate(self.body):  # FIXME
-                try:
-                    self.body[num] = self.body[num + 1]
-                except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
-            self.head["y"] += 10
-
+            pass
         """Left"""
         if self.direction == 3:
-            self.tail = self.body[0]
-            for num, part in enumerate(self.body):  # FIXME
-                try:
-                    self.body[num] = self.body[num + 1]
-                except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
-            self.head["x"] -= 10
+            pass
 
     def show(self):  # Displays the current position of the snake
         pygame.draw.rect(screen, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
         for part in self.body:
             pygame.draw.rect(screen, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
-        print(self.body, "and head is at:", self.head)  # FIXME
 
 
 class Apple:
