@@ -77,7 +77,7 @@ class Snake:
                 try:
                     self.body[num] = self.body[num+1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
+                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
             self.tail = self.body[0]
             self.head["x"] += 10
         """Up"""
@@ -87,7 +87,8 @@ class Snake:
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
+                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+            self.tail = self.body[0]
             self.head["y"] -= 10
 
         """Down"""
@@ -97,7 +98,8 @@ class Snake:
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
+                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+            self.tail = self.body[0]
             self.head["y"] += 10
 
         """Left"""
@@ -107,14 +109,15 @@ class Snake:
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = self.head
+                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+            self.tail = self.body[0]
             self.head["x"] -= 10
 
     def show(self, surface):  # Displays the current position of the snake
         pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
         for part in self.body:
             pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
-        print(self.body, "and head is at:", self.head)  # FIXME
+        print("tail:", self.tail, "body", self.body, "head:", self.head)  # FIXME
 
 
 class Apple:
