@@ -7,12 +7,10 @@ import sys
 # Settings
 CAPTION = "Snake"
 SNAKE_COLOR = (0, 255, 0)
-BACKGROUD_COLOR = (53, 53, 53)
+BACKGROUND_COLOR = (53, 53, 53)
 APPLE_COLOR = (255, 0, 0)
 WIDTH = 500  # Only put number divisible by 10
 HEIGHT = 500  # Only put number divisible by 10
-
-
 
 
 class Game:
@@ -29,20 +27,22 @@ class Game:
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
+                    print("Your score is {}.".format(self.score))
                     pygame.quit()
                     sys.exit()
-                if event.type == KEYDOWN and event.key == K_RIGHT:
-                    self.snake.direction = 0
-                    self.tick()
-                if event.type == KEYDOWN and event.key == K_UP:
-                    self.snake.direction = 1
-                    self.tick()
-                if event.type == KEYDOWN and event.key == K_DOWN:
-                    self.snake.direction = 2
-                    self.tick()
-                if event.type == KEYDOWN and event.key == K_LEFT:
-                    self.snake.direction = 3
-                    self.tick()
+                if event.type == KEYDOWN:
+                    if event.key == K_RIGHT:
+                        self.snake.direction = 0
+                        self.tick()
+                    if event.key == K_UP:
+                        self.snake.direction = 1
+                        self.tick()
+                    if event.key == K_DOWN:
+                        self.snake.direction = 2
+                        self.tick()
+                    if event.key == K_LEFT:
+                        self.snake.direction = 3
+                        self.tick()
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -51,7 +51,7 @@ class Game:
             return False
 
     def show_all(self):
-        self.screen.fill(BACKGROUD_COLOR)
+        self.screen.fill(BACKGROUND_COLOR)
         self.apple.show(self.screen)
         self.snake.show(self.screen)
         pygame.display.flip()
@@ -93,7 +93,6 @@ class Snake:
                     self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
             self.tail = self.body[0]
             self.head["y"] -= 10
-
         """Down"""
         if self.direction == 2:
             self.tail = self.body[0]
@@ -104,7 +103,6 @@ class Snake:
                     self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
             self.tail = self.body[0]
             self.head["y"] += 10
-
         """Left"""
         if self.direction == 3:
             self.tail = self.body[0]
@@ -120,19 +118,23 @@ class Snake:
         pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
         for part in self.body:
             pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
-        print("tail:", self.tail, "body", self.body, "head:", self.head)  # FIXME
+        print("tail:", self.tail, "body", self.body, "head:", self.head)
 
     def grow(self):
         self.body.insert(0, self.tail)
+
+
 class Apple:
     def __init__(self, snake_body, snake_head):  # generates position
-        self.x = random.randrange(0, WIDTH+10, 10)
-        self.y = random.randrange(0, HEIGHT+10, 10)
+        self.x = random.randrange(0, WIDTH, 10)
+        self.y = random.randrange(0, HEIGHT, 10)
         self.position = {"x": self.x, "y": self.y}
+        print("apple:", self.position)
         while self.position in snake_body or self.position == snake_head:
-            self.x = random.randrange(0, 510, 10)
-            self.y = random.randrange(0, 510, 10)
+            self.x = random.randrange(0, WIDTH, 10)
+            self.y = random.randrange(0, HEIGHT, 10)
             self.position = {"x" : self.x, "y" : self.y}
+            print("apple:", self.position)
 
     def show(self, surface):
         pygame.draw.rect(surface, APPLE_COLOR, pygame.Rect(self.x, self.y, 10, 10))
