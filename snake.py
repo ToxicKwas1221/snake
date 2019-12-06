@@ -2,14 +2,15 @@ import pygame
 from pygame.locals import *
 import random
 import sys
+from colorama import Fore
 
 # Settings
 CAPTION = "Snake"
 SNAKE_COLOR = (0, 255, 0)
 BACKGROUND_COLOR = (53, 53, 53)
 APPLE_COLOR = (255, 0, 0)
-WIDTH = 200  # Only put number divisible by 10
-HEIGHT = 200  # Only put number divisible by 10
+WIDTH = 200  # Only put positive number divisible by 10
+HEIGHT = 200  # Only put positive number divisible by 10
 
 
 class Game:
@@ -26,7 +27,7 @@ class Game:
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    print("Your score is {}.".format(self.score))
+                    print(Fore.CYAN+"Your score is {}.".upper().format(self.score))
                     pygame.quit()
                     sys.exit()
                 if event.type == KEYDOWN:
@@ -79,7 +80,7 @@ class Game:
             print("Scored:", self.score, ",at", self.apple.position)
             self.show_all()
         if self.body_hit() or self.wall_hit():
-            print("Your score is {}.".format(self.score))
+            print(Fore.CYAN+"Your score is {}.".upper().format(self.score))
             pygame.quit()
             sys.exit()
 
@@ -136,7 +137,6 @@ class Snake:
         pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(self.head["x"], self.head["y"], 10, 10))
         for part in self.body:
             pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(part['x'], part["y"], 10, 10))
-        print("tail:", self.tail, "body", self.body, "head:", self.head)
 
     def grow(self):
         self.body.insert(0, self.tail)
