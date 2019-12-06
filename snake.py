@@ -3,14 +3,13 @@ from pygame.locals import *
 import random
 import sys
 
-
 # Settings
 CAPTION = "Snake"
 SNAKE_COLOR = (0, 255, 0)
 BACKGROUND_COLOR = (53, 53, 53)
 APPLE_COLOR = (255, 0, 0)
-WIDTH = 500  # Only put number divisible by 10
-HEIGHT = 500  # Only put number divisible by 10
+WIDTH = 200  # Only put number divisible by 10
+HEIGHT = 200  # Only put number divisible by 10
 
 
 class Game:
@@ -50,6 +49,20 @@ class Game:
         else:
             return False
 
+    def body_hit(self):
+        if self.snake.head in self.snake.body:
+            return True
+        else:
+            return False
+
+    def wall_hit(self):
+        if self.snake.head["x"] == WIDTH or self.snake.head["y"] == HEIGHT:
+            return True
+        elif self.snake.head["x"] == -10 or self.snake.head["y"] == -10:
+            return True
+        else:
+            return False
+
     def show_all(self):
         self.screen.fill(BACKGROUND_COLOR)
         self.apple.show(self.screen)
@@ -60,10 +73,15 @@ class Game:
         self.snake.move()
         self.show_all()
         if self.food_eaten():
+            self.apple.__init__(self.snake.body, self.snake.head)
             self.score += 1
             self.snake.grow()
             print("Scored:", self.score, ",at", self.apple.position)
-            self.apple.__init__(self.snake.body, self.snake.head)
+            self.show_all()
+        if self.body_hit() or self.wall_hit():
+            print("Your score is {}.".format(self.score))
+            pygame.quit()
+            sys.exit()
 
 
 class Snake:
@@ -78,9 +96,9 @@ class Snake:
         if self.direction == 0:
             for num, part in enumerate(self.body):
                 try:
-                    self.body[num] = self.body[num+1]
+                    self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+                    self.body[num] = {"x": self.head["x"], "y": self.head["y"]}
             self.tail = self.body[0]
             self.head["x"] += 10
         """Up"""
@@ -90,7 +108,7 @@ class Snake:
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+                    self.body[num] = {"x": self.head["x"], "y": self.head["y"]}
             self.tail = self.body[0]
             self.head["y"] -= 10
         """Down"""
@@ -100,7 +118,7 @@ class Snake:
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+                    self.body[num] = {"x": self.head["x"], "y": self.head["y"]}
             self.tail = self.body[0]
             self.head["y"] += 10
         """Left"""
@@ -110,7 +128,7 @@ class Snake:
                 try:
                     self.body[num] = self.body[num + 1]
                 except IndexError:  # Will occur when iteration got to the last body part
-                    self.body[num] = {"x":self.head["x"], "y":self.head["y"]}
+                    self.body[num] = {"x": self.head["x"], "y": self.head["y"]}
             self.tail = self.body[0]
             self.head["x"] -= 10
 
@@ -133,7 +151,7 @@ class Apple:
         while self.position in snake_body or self.position == snake_head:
             self.x = random.randrange(0, WIDTH, 10)
             self.y = random.randrange(0, HEIGHT, 10)
-            self.position = {"x" : self.x, "y" : self.y}
+            self.position = {"x": self.x, "y": self.y}
             print("apple:", self.position)
 
     def show(self, surface):
@@ -143,7 +161,5 @@ class Apple:
 if __name__ == '__main__':
     game = Game()
     game.start()
-
-
 
 # THE END
