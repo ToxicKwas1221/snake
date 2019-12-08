@@ -6,11 +6,12 @@ from colorama import Fore
 
 # Settings
 CAPTION = "Snake"
-SNAKE_COLOR = (0, 255, 0)
-BACKGROUND_COLOR = (53, 53, 53)
-APPLE_COLOR = (255, 0, 0)
+SNAKE_COLOR = (0, 255, 0)  # RGB
+BACKGROUND_COLOR = (53, 53, 53)  # RGB
+APPLE_COLOR = (255, 0, 0)  # RGB
 WIDTH = 200  # Only put positive number divisible by 10
 HEIGHT = 200  # Only put positive number divisible by 10
+DELAY = 100  # Milliseconds
 
 
 class Game:
@@ -33,16 +34,16 @@ class Game:
                 if event.type == KEYDOWN:
                     if event.key == K_RIGHT:
                         self.snake.direction = 0
-                        self.tick()
+                        self.tick(K_RIGHT)
                     if event.key == K_UP:
                         self.snake.direction = 1
-                        self.tick()
+                        self.tick(K_UP)
                     if event.key == K_DOWN:
                         self.snake.direction = 2
-                        self.tick()
+                        self.tick(K_DOWN)
                     if event.key == K_LEFT:
                         self.snake.direction = 3
-                        self.tick()
+                        self.tick(K_LEFT)
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -70,7 +71,10 @@ class Game:
         self.snake.show(self.screen)
         pygame.display.flip()
 
-    def tick(self):
+    def tick(self, key):
+        pygame.event.clear()
+        pygame.time.delay(DELAY)
+        pygame.event.post(pygame.event.Event(KEYDOWN, {"key": key}))
         self.snake.move()
         self.show_all()
         if self.food_eaten():
