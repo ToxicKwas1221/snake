@@ -5,7 +5,7 @@ import sys
 from colorama import Fore
 
 # Settings
-CAPTION = "Snake"
+CAPTION = "Snake"  # Title of the window
 SNAKE_COLOR = (0, 255, 0)  # RGB
 BACKGROUND_COLOR = (53, 53, 53)  # RGB
 APPLE_COLOR = (255, 0, 0)  # RGB
@@ -34,16 +34,20 @@ class Game:
                 if event.type == KEYDOWN:
                     if event.key == K_RIGHT:
                         self.snake.direction = 0
-                        self.tick(K_RIGHT)
+                        while not pygame.event.peek(KEYDOWN):  # IOW: while no buttons pressed
+                            self.tick()
                     if event.key == K_UP:
                         self.snake.direction = 1
-                        self.tick(K_UP)
+                        while not pygame.event.peek(KEYDOWN):
+                            self.tick()
                     if event.key == K_DOWN:
                         self.snake.direction = 2
-                        self.tick(K_DOWN)
+                        while not pygame.event.peek(KEYDOWN):
+                            self.tick()
                     if event.key == K_LEFT:
                         self.snake.direction = 3
-                        self.tick(K_LEFT)
+                        while not pygame.event.peek(KEYDOWN):
+                            self.tick()
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -71,19 +75,14 @@ class Game:
         self.snake.show(self.screen)
         pygame.display.flip()
 
-    def tick(self, key):
+    def tick(self):
         pygame.time.delay(DELAY)
-        if pygame.event.peek(KEYDOWN):
-            pass
-        else:
-            pygame.event.post(pygame.event.Event(KEYDOWN, {"key": key}))
         self.snake.move()
         self.show_all()
         if self.food_eaten():
             self.apple.__init__(self.snake.body, self.snake.head)
             self.score += 1
             self.snake.grow()
-            print("Scored:", self.score, ",at", self.apple.position)
             self.show_all()
         if self.body_hit() or self.wall_hit():
             print(Fore.CYAN+"Your score is {}.".upper().format(self.score))
@@ -149,16 +148,15 @@ class Snake:
 
 
 class Apple:
-    def __init__(self, snake_body, snake_head):  # generates position
+    """Generates the position"""
+    def __init__(self, snake_body, snake_head):
         self.x = random.randrange(0, WIDTH, 10)
         self.y = random.randrange(0, HEIGHT, 10)
         self.position = {"x": self.x, "y": self.y}
-        print("apple:", self.position)
         while self.position in snake_body or self.position == snake_head:
             self.x = random.randrange(0, WIDTH, 10)
             self.y = random.randrange(0, HEIGHT, 10)
             self.position = {"x": self.x, "y": self.y}
-            print("apple:", self.position)
 
     def show(self, surface):
         pygame.draw.rect(surface, APPLE_COLOR, pygame.Rect(self.x, self.y, 10, 10))
