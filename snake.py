@@ -9,8 +9,8 @@ CAPTION = "Snake"
 SNAKE_COLOR = (0, 255, 0)  # RGB
 BACKGROUND_COLOR = (53, 53, 53)  # RGB
 APPLE_COLOR = (255, 0, 0)  # RGB
-WIDTH = 200  # Only put positive number divisible by 10
-HEIGHT = 200  # Only put positive number divisible by 10
+WIDTH = 300  # Only put positive number divisible by 10
+HEIGHT = 300  # Only put positive number divisible by 10
 DELAY = 100  # Milliseconds
 
 
@@ -72,9 +72,11 @@ class Game:
         pygame.display.flip()
 
     def tick(self, key):
-        pygame.event.clear()
         pygame.time.delay(DELAY)
-        pygame.event.post(pygame.event.Event(KEYDOWN, {"key": key}))
+        if pygame.event.peek(KEYDOWN):
+            pass
+        else:
+            pygame.event.post(pygame.event.Event(KEYDOWN, {"key": key}))
         self.snake.move()
         self.show_all()
         if self.food_eaten():
