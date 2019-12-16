@@ -9,9 +9,9 @@ CAPTION = "Snake"  # Title of the window
 SNAKE_COLOR = (0, 255, 0)  # RGB
 BACKGROUND_COLOR = (53, 53, 53)  # RGB
 APPLE_COLOR = (255, 0, 0)  # RGB
-WIDTH = 300  # Only put positive number divisible by 10
-HEIGHT = 300  # Only put positive number divisible by 10
-DELAY = 100  # Milliseconds
+WIDTH = int(input("Width(Only put positive number, divisible by 10): "))  # Only put positive number divisible by 10
+HEIGHT = int(input("Height(Only put positive number, divisible by 10): "))  # Only put positive number divisible by 10
+DELAY = int(input("Delay(Only put positive number): "))  # Milliseconds
 
 
 class Game:
@@ -25,6 +25,7 @@ class Game:
 
     def start(self):
         self.show_all()
+        pygame.event.set_blocked(MOUSEMOTION)
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -36,18 +37,27 @@ class Game:
                         self.snake.direction = 0
                         while not pygame.event.peek(KEYDOWN):  # IOW: while no buttons pressed
                             self.tick()
-                    if event.key == K_UP:
+                    elif event.key == K_UP:
                         self.snake.direction = 1
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
-                    if event.key == K_DOWN:
+                    elif event.key == K_DOWN:
                         self.snake.direction = 2
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
-                    if event.key == K_LEFT:
+                    elif event.key == K_LEFT:
                         self.snake.direction = 3
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
+
+    def end(self):
+        print(Fore.CYAN + "Your score is {}.".upper().format(self.score))
+        pygame.event.set_blocked(None)
+        pygame.event.set_allowed(QUIT)
+        while not pygame.event.peek(QUIT):
+            pass
+        pygame.quit()
+        sys.exit()
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -85,9 +95,7 @@ class Game:
             self.snake.grow()
             self.show_all()
         if self.body_hit() or self.wall_hit():
-            print(Fore.CYAN+"Your score is {}.".upper().format(self.score))
-            pygame.quit()
-            sys.exit()
+            self.end()
 
 
 class Snake:
