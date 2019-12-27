@@ -1,3 +1,4 @@
+
 import pygame
 from pygame.locals import *
 import random
@@ -9,9 +10,9 @@ CAPTION = "Snake"  # Title of the window
 SNAKE_COLOR = (0, 255, 0)  # RGB
 BACKGROUND_COLOR = (53, 53, 53)  # RGB
 APPLE_COLOR = (255, 0, 0)  # RGB
-WIDTH = int(input("Width(Only put positive number, divisible by 10): "))  # Only put positive number divisible by 10
-HEIGHT = int(input("Height(Only put positive number, divisible by 10): "))  # Only put positive number divisible by 10
-DELAY = int(input("Delay(Only put positive number): "))  # Milliseconds
+WIDTH = 400
+HEIGHT = 400
+DELAY = 90
 
 
 class Game:
@@ -34,19 +35,34 @@ class Game:
                     sys.exit()
                 if event.type == KEYDOWN:
                     if event.key == K_RIGHT:
-                        self.snake.direction = 0
+                        if self.snake.direction == 3:  # IOW: if snake is not going in opposite direction
+                            pass
+                        else:
+                            self.snake.direction = 0
                         while not pygame.event.peek(KEYDOWN):  # IOW: while no buttons pressed
                             self.tick()
+
                     elif event.key == K_UP:
-                        self.snake.direction = 1
+                        if self.snake.direction == 2:
+                            pass
+                        else:
+                            self.snake.direction = 1
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
+
                     elif event.key == K_DOWN:
-                        self.snake.direction = 2
+                        if self.snake.direction == 1:
+                            pass
+                        else:
+                            self.snake.direction = 2
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
+
                     elif event.key == K_LEFT:
-                        self.snake.direction = 3
+                        if self.snake.direction == 0:
+                            pass
+                        else:
+                            self.snake.direction = 3
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
 
@@ -66,10 +82,7 @@ class Game:
             return False
 
     def body_hit(self):
-        if self.snake.head in self.snake.body:
-            return True
-        else:
-            return False
+        return self.snake.head in self.snake.body
 
     def wall_hit(self):
         if self.snake.head["x"] == WIDTH or self.snake.head["y"] == HEIGHT:
