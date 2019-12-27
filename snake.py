@@ -33,12 +33,14 @@ class Game:
                     print(Fore.CYAN+"Your score is {}.".upper().format(self.score))
                     pygame.quit()
                     sys.exit()
+                """0-right 1-up 2-down 3-left"""
                 if event.type == KEYDOWN:
                     if event.key == K_RIGHT:
                         if self.snake.direction == 3:  # IOW: if snake is not going in opposite direction
                             pass
                         else:
                             self.snake.direction = 0
+                            self.tick()
                         while not pygame.event.peek(KEYDOWN):  # IOW: while no buttons pressed
                             self.tick()
 
@@ -47,6 +49,7 @@ class Game:
                             pass
                         else:
                             self.snake.direction = 1
+                            self.tick()
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
 
@@ -55,6 +58,7 @@ class Game:
                             pass
                         else:
                             self.snake.direction = 2
+                            self.tick()
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
 
@@ -63,6 +67,7 @@ class Game:
                             pass
                         else:
                             self.snake.direction = 3
+                            self.tick()
                         while not pygame.event.peek(KEYDOWN):
                             self.tick()
 
@@ -127,7 +132,7 @@ class Snake:
         self.head = {"x": 70, "y": 30}
         self.tail = {"x": 40, "y": 30}
         self.body = [self.tail, {"x": 50, "y": 30}, {"x": 60, "y": 30}]  # Coordinates of body parts
-        self.direction = None
+        self.direction = 0
 
     def move(self):
         """Right"""
