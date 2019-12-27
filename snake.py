@@ -1,4 +1,3 @@
-
 import pygame
 from pygame.locals import *
 import random
@@ -12,7 +11,8 @@ BACKGROUND_COLOR = (53, 53, 53)  # RGB
 APPLE_COLOR = (255, 0, 0)  # RGB
 WIDTH = 400
 HEIGHT = 400
-DELAY = 90
+DELAY = 40
+WALL_HIT = False
 
 
 class Game:
@@ -85,9 +85,9 @@ class Game:
         return self.snake.head in self.snake.body
 
     def wall_hit(self):
-        if self.snake.head["x"] == WIDTH or self.snake.head["y"] == HEIGHT:
+        if self.snake.head["x"] == WIDTH or self.snake.head["x"] == -10:  # right and left edges
             return True
-        elif self.snake.head["x"] == -10 or self.snake.head["y"] == -10:
+        elif self.snake.head["y"] == HEIGHT or self.snake.head["y"] == -10:  # down and upper edges
             return True
         else:
             return False
@@ -102,12 +102,23 @@ class Game:
         pygame.time.delay(DELAY)
         self.snake.move()
         self.show_all()
+        if self.wall_hit():
+            if WALL_HIT:
+                self.end()
+            if self.snake.head['x'] == WIDTH:
+                self.snake.head['x'] = 0
+            elif self.snake.head['x'] == -10:
+                self.snake.head['x'] = WIDTH-10
+            elif self.snake.head['y'] == HEIGHT:
+                self.snake.head['y'] = 0
+            elif self.snake.head['y'] == -10:
+                self.snake.head['y'] = HEIGHT-10
         if self.food_eaten():
             self.apple.__init__(self.snake.body, self.snake.head)
             self.score += 1
             self.snake.grow()
             self.show_all()
-        if self.body_hit() or self.wall_hit():
+        if self.body_hit():
             self.end()
 
 
