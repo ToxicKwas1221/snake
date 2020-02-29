@@ -1,18 +1,15 @@
 import pygame
 from pygame.locals import *
 import random
-import sys
 from enum import Enum
-from colorama import Fore, init
-init()
 
 # Settings
 CAPTION = "Snake"  # Title of the window
 SNAKE_COLOR = (0, 255, 0)  # RGB
 BACKGROUND_COLOR = (53, 53, 53)  # RGB
 APPLE_COLOR = (255, 0, 0)  # RGB
-WIDTH = 400
-HEIGHT = 400
+WIDTH = 700
+HEIGHT = 700
 DELAY = 20
 WALL_HIT = False
 
@@ -39,9 +36,9 @@ class Game:
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    print(Fore.CYAN+"Your score is {}.".format(self.score)+Fore.RESET)
+                    print("Your score is {}.".format(self.score))
                     pygame.quit()
-                    sys.exit()
+                    exit()
                 """0-right 1-up 2-down 3-left"""
                 if event.type == KEYDOWN:
                     if event.key == K_RIGHT:
@@ -81,13 +78,16 @@ class Game:
                             self.tick()
 
     def end(self):
-        print(Fore.CYAN + "Your score is {}.".upper().format(self.score))
+        print("Your score is {}.".format(self.score))
         pygame.event.set_blocked(None)
         pygame.event.set_allowed(QUIT)
+        font = pygame.font.Font(None, 50).render(f'Your score is {self.score}.', True, APPLE_COLOR)
+        self.screen.blit(font, (20, 20))
+        pygame.display.flip()
         while not pygame.event.peek(QUIT):
             pass
         pygame.quit()
-        sys.exit()
+        exit()
 
     def food_eaten(self):
         if self.snake.head == self.apple.position:
@@ -135,9 +135,9 @@ class Game:
         if self.body_hit():
             self.end()
         if pygame.event.peek(QUIT):
-            print(Fore.CYAN+"Your score is {}.".format(self.score)+Fore.RESET)
+            print("Your score is {}.".format(self.score))
             pygame.quit()
-            sys.exit()
+            exit()
 
 
 class Snake:
